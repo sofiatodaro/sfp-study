@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#9a6cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SFP Study">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon.png">
+<title>SFP Study</title>
+<style>
+:root{
+ --bg:#f7f3ff;--panel:#ffffff;--panel2:#fbf9ff;--text:#262236;--muted:#786f8d;
+ --violet:#8d59ef;--violet2:#b48cff;--lilac:#eadcff;--lilac2:#f2eaff;
+ --green:#3eaf7c;--red:#db5f7a;--amber:#f2a94a;--line:#eadff7;
+ --shadow:0 16px 42px rgba(109,74,160,.12)
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:linear-gradient(180deg,#fbf9ff 0%,var(--bg) 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100vh}
+button,input,select,textarea{font:inherit}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(247,243,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1180px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:11px}.brand img{width:48px;height:48px;border-radius:15px;box-shadow:0 8px 18px rgba(141,89,239,.25)}
+.brand h1{font-size:22px;margin:0}.brand small{display:block;color:var(--muted);margin-top:2px}
+.countdown{background:var(--lilac2);color:#6945b0;padding:9px 13px;border-radius:999px;font-weight:800;font-size:13px}
+main{max-width:1180px;margin:auto;padding:18px 18px 100px}
+.screen{display:none}.screen.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+.hero{grid-column:span 8}.stats{grid-column:span 4}.today{grid-column:span 7}.module-card{grid-column:span 5}.full{grid-column:span 12}.half{grid-column:span 6}
+h2{font-size:20px;margin:0 0 12px}.muted{color:var(--muted);font-size:13px}.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.progress{height:14px;background:#efe8f8;border-radius:999px;overflow:hidden}.progress>div{height:100%;background:linear-gradient(90deg,var(--violet),var(--violet2));transition:width .35s ease}
+.note{background:linear-gradient(135deg,#f4ebff,#fff);border:1px solid #e8d8ff;padding:12px;border-radius:15px;color:#68479d;font-size:14px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:13px}.kpi strong{font-size:24px;display:block}
+.action{border:0;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:linear-gradient(135deg,var(--violet),var(--violet2));color:#fff}.soft{background:var(--lilac2);color:#6541a8}.danger{background:#fff0f4;color:#b93f5d}
+.task{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}.task:last-child{border-bottom:0}.task input{width:21px;height:21px;accent-color:var(--violet)}
+.task-title{font-weight:800}.task-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.module{margin:11px 0}.module-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.bottomnav{position:fixed;z-index:30;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}
+.bottomnav button{border:0;background:transparent;color:#8c839b;font-weight:800;font-size:11px;padding:7px 2px}.bottomnav button span{display:block;font-size:21px;margin-bottom:2px}.bottomnav button.active{color:var(--violet)}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}th{color:var(--muted)}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;background:#fff;padding:9px}
+.status{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800}.done{background:#e7f8f0;color:#1c835c}.planned{background:#efe9ff;color:#6a46b6}.review{background:#fff4df;color:#9c6916}.missed{background:#ffeef2;color:#ae3e59}
+.study-list{display:grid;gap:12px}.study-item{background:var(--panel2);border:1px solid var(--line);border-radius:17px;padding:15px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.study-item h3{margin:0 0 4px;font-size:16px}
+.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.goal{display:flex;align-items:center;gap:10px;padding:9px 0}.goal input{width:19px;height:19px;accent-color:var(--violet)}
+.mood-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.mood-grid button{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px 8px;cursor:pointer}.mood-grid button.selected{border-color:var(--violet);background:var(--lilac2)}
+.stars-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}.star{position:absolute;color:#b57cff;font-size:24px;animation:floatStar 2.2s ease-out forwards}
+@keyframes floatStar{0%{transform:translateY(30px) scale(.5);opacity:0}20%{opacity:1}100%{transform:translateY(-220px) scale(1.2) rotate(35deg);opacity:0}}
+.modal{position:fixed;inset:0;background:rgba(57,40,82,.35);z-index:50;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modal-card{max-width:480px;width:100%;background:#fff;border-radius:24px;padding:22px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(63,40,96,.25)}
+.special{text-align:center}.special .bigstar{font-size:56px}.special h2{font-size:25px}
+@media(max-width:800px){.hero,.stats,.today,.module-card,.full,.half{grid-column:span 12}.formgrid{grid-template-columns:1fr 1fr}table{display:block;overflow-x:auto;white-space:nowrap}.topbar-inner{padding:10px 13px}.brand h1{font-size:19px}.countdown{font-size:11px;padding:7px 9px}main{padding:14px 13px 100px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner">
+ <div class="brand"><img src="icon-192.png" alt="SFP Study"><div><h1>SFP Study</h1><small>Benvenuta, Sofia ⭐</small></div></div>
+ <div id="countdown" class="countdown">Calcolo...</div>
+</div></div>
+
+<main>
+<section id="home" class="screen active">
+ <div class="grid">
+  <div class="card hero">
+   <div class="row"><div><h2>Il tuo percorso</h2><div class="muted">Preparazione al test SFP 2026</div></div><strong id="overallPct">0%</strong></div>
+   <div class="progress" style="margin:14px 0 10px"><div id="overallBar" style="width:0"></div></div>
+   <div id="motivation" class="note">Ogni piccolo passo ti avvicina al tuo traguardo.</div>
+  </div>
+  <div class="card stats">
+   <h2>In sintesi</h2><div class="kpis">
+    <div class="kpi"><strong id="doneCount">0</strong><span class="muted">capitoli completati</span></div>
+    <div class="kpi"><strong id="remainingCount">0</strong><span class="muted">rimanenti</span></div>
+    <div class="kpi"><strong id="avgQuiz">—</strong><span class="muted">media quiz</span></div>
+    <div class="kpi"><strong id="studyDays">0</strong><span class="muted">giorni studiati</span></div>
+   </div>
+  </div>
+  <div class="card today">
+   <div class="row"><div><h2>Oggi devi studiare</h2><div id="todayDate" class="muted"></div></div><button class="action primary" onclick="completeToday()">Completa tutto</button></div>
+   <div id="todayTasks"></div>
+   <div class="toolbar"><button class="action soft" onclick="postponeToday()">Rimanda la giornata</button></div>
+  </div>
+  <div class="card module-card"><h2>Modulo attuale</h2><div id="currentModule"></div></div>
+  <div class="card half"><h2>Obiettivo settimanale</h2><div id="weeklyGoals"></div></div>
+  <div class="card half"><h2>Come è andata oggi?</h2><div class="mood-grid" id="moods"></div></div>
+ </div>
+</section>
+
+<section id="study" class="screen">
+ <div class="grid">
+  <div class="card full">
+   <div class="row"><div><h2>Studio</h2><div class="muted">Apri un capitolo e continua dal punto esatto.</div></div><button class="action soft" onclick="openChatGuide()">Continua con ChatGPT</button></div>
+   <div id="studyList" class="study-list"></div>
+  </div>
+ </div>
+</section>
+
+<section id="calendar" class="screen">
+ <div class="card full">
+  <div class="row"><div><h2>Calendario</h2><div class="muted">Timeline del piano di studio</div></div></div>
+  <div class="toolbar"><button class="action soft" onclick="shiftPlan(1)">Sposta tutto +1 giorno</button><button class="action soft" onclick="shiftPlan(-1)">Anticipa -1 giorno</button></div>
+  <div style="overflow:auto"><table><thead><tr><th>Data</th><th>Studio previsto</th><th>Stato</th><th>Quiz</th><th>Note</th></tr></thead><tbody id="calendarBody"></tbody></table></div>
+ </div>
+</section>
+
+<section id="progress" class="screen">
+ <div class="grid">
+  <div class="card half"><h2>Progressi per modulo</h2><div id="moduleProgress"></div></div>
+  <div class="card half"><h2>Registro rapido</h2><p class="muted">Voti, sicurezza e giornate di studio.</p><div id="registerSummary"></div></div>
+  <div class="card full"><h2>Registro completo</h2><div style="overflow:auto"><table><thead><tr><th>Data</th><th>Capitoli</th><th>Esercizi</th><th>Quiz</th><th>Sicurezza</th></tr></thead><tbody id="registerBody"></tbody></table></div></div>
+ </div>
+</section>
+
+<section id="simulations" class="screen">
+ <div class="grid">
+  <div class="card full">
+   <h2>Simulazioni</h2><div class="muted">Registra punteggio, tempo ed errori.</div>
+   <div class="formgrid" style="margin-top:12px">
+    <div><label>Data</label><input id="simDate" type="date"></div>
+    <div><label>Punteggio</label><input id="simScore" type="number" min="0" max="100"></div>
+    <div><label>Tempo (minuti)</label><input id="simTime" type="number" min="0"></div>
+    <div><label>Errori</label><input id="simErrors" type="number" min="0"></div>
+   </div>
+   <div class="toolbar"><button class="action primary" onclick="addSimulation()">Aggiungi simulazione</button></div>
+   <div style="overflow:auto"><table><thead><tr><th>Data</th><th>Punteggio</th><th>Tempo</th><th>Errori</th></tr></thead><tbody id="simulationBody"></tbody></table></div>
+  </div>
+  <div class="card full"><h2>Impostazioni e backup</h2><div class="toolbar"><button class="action primary" onclick="exportData()">Esporta backup</button><button class="action soft" onclick="document.getElementById('importFile').click()">Importa backup</button><input id="importFile" hidden type="file" accept=".json" onchange="importData(event)"><button class="action danger" onclick="resetData()">Cancella dati</button></div><div class="muted">I dati restano nel browser del dispositivo. Conserva un backup periodico.</div></div>
+ </div>
+</section>
+</main>
+
+<nav class="bottomnav">
+ <button class="active" onclick="go('home',this)"><span>🏠</span>Home</button>
+ <button onclick="go('study',this)"><span>📚</span>Studio</button>
+ <button onclick="go('calendar',this)"><span>📅</span>Calendario</button>
+ <button onclick="go('progress',this)"><span>📊</span>Progressi</button>
+ <button onclick="go('simulations',this)"><span>🧠</span>Simulazioni</button>
+</nav>
+
+<div id="modal" class="modal"><div class="modal-card special"><div class="bigstar">⭐</div><h2 id="modalTitle">Complimenti, Sofia</h2><p id="modalText"></p><button class="action primary" onclick="closeModal()">Continua</button></div></div>
+<div id="starsLayer" class="stars-layer"></div>
+
+<script>
+const TEST_DATE='2026-09-11';
+const basePlan=[
+['2026-07-13',['M2 C9','M2 C10','M2 C11','M2 C12']],['2026-07-14',['M2 C13','M2 C14','M2 C15']],
+['2026-07-15',['M1 C4','M1 C5','M3 C1','M3 C2']],['2026-07-16',['M3 C3','M3 C4','M3 C5','M3 C6']],
+['2026-07-17',['M4 C1','M4 C2','M4 C3','M4 C4']],['2026-07-20',['M4 C5','M4 C6','M4 C7','M4 C8']],
+['2026-07-21',['M5 C1','M5 C2','M5 C3','M5 C4']],['2026-07-22',['M5 C5','M5 C6','M5 C7','M5 C8']],
+['2026-07-23',['M5 C9','M6 C1','M6 C2','M6 C3']],['2026-07-24',['M6 C4','M6 C5','M6 C6','M6 C7']],
+['2026-07-27',['M6 C8','M6 C9','M7 C1','M7 C2']],['2026-07-28',['M7 C3','M7 C4','M7 C5','M7 C6']],
+['2026-07-29',['M7 C7','M7 C8','M8 C1','M8 C2']],['2026-07-30',['M8 C3','M8 C4','M8 C5','M8 C6']],
+['2026-07-31',['M8 C7','M8 C8','M9 C1','M9 C2']],['2026-08-03',['M9 C3','M9 C4','M9 C5','M9 C6']],
+['2026-08-04',['M9 C7','M9 C8','M9 C9','M9 C10']],['2026-08-05',['M9 C11','M9 C12','M9 C13','M9 C14']]];
+const moduleNames={M1:'Comprensione del testo',M2:'Grammatica italiana',M3:'Logica',M4:'Letteratura italiana',M5:'Storia',M6:'Geografia',M7:'Matematica',M8:'Scienze',M9:'Ripasso e simulazioni'};
+const motivations=['Ogni piccolo passo ti avvicina al tuo traguardo.','La costanza vale più della perfezione.','Studiare con metodo significa arrivare più lontano.','Un capitolo alla volta, il tuo obiettivo diventa reale.'];
+let state=JSON.parse(localStorage.getItem('sfp-study-state')||'null')||{shift:0,done:{},quiz:{},exercise:{},notes:{},safety:{},mood:{},sims:[],weeklyCelebrated:{}};
+const $=id=>document.getElementById(id);
+function go(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.bottomnav button').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');btn.classList.add('active')}
+function addDays(s,n){let d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function fmt(s){return new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date(s+'T12:00:00'))}
+function plan(){return basePlan.map(([d,c])=>[addDays(d,state.shift),c])}
+function save(){localStorage.setItem('sfp-study-state',JSON.stringify(state));render()}
+function todayISO(){return new Date().toISOString().slice(0,10)}
+function currentOrNextRow(){let p=plan(),t=todayISO();return p.find(r=>r[0]>=t)||p[p.length-1]}
+function allKeys(){return plan().flatMap(([d,cs])=>cs.map(c=>d+'|'+c))}
+function weekKey(dateStr){let d=new Date(dateStr+'T12:00:00'),day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.toISOString().slice(0,10)}
+function celebrate(){let layer=$('starsLayer');for(let i=0;i<24;i++){let s=document.createElement('div');s.className='star';s.textContent='⭐';s.style.left=(5+Math.random()*90)+'%';s.style.bottom=(-10+Math.random()*50)+'px';s.style.animationDelay=(Math.random()*.7)+'s';layer.appendChild(s);setTimeout(()=>s.remove(),3000)}}
+function render(){
+ let p=plan(),keys=allKeys(),done=keys.filter(k=>state.done[k]).length,pct=Math.round(done/keys.length*100);
+ $('overallPct').textContent=pct+'%';$('overallBar').style.width=pct+'%';$('doneCount').textContent=done;$('remainingCount').textContent=keys.length-done;
+ let qs=Object.values(state.quiz).map(Number).filter(x=>x>0);$('avgQuiz').textContent=qs.length?(qs.reduce((a,b)=>a+b,0)/qs.length).toFixed(1):'—';
+ $('studyDays').textContent=new Set(keys.filter(k=>state.done[k]).map(k=>k.split('|')[0])).size;
+ let diff=Math.max(0,Math.ceil((new Date(TEST_DATE+'T12:00:00')-new Date())/86400000));$('countdown').textContent='Mancano '+diff+' giorni al test';
+ $('motivation').textContent=motivations[new Date().getDate()%motivations.length];
+ let t=todayISO(),tr=p.find(r=>r[0]===t);$('todayDate').textContent=fmt(t);$('todayTasks').innerHTML='';
+ if(tr){tr[1].forEach(c=>{let k=t+'|'+c;$('todayTasks').innerHTML+=`<label class="task"><input type="checkbox" ${state.done[k]?'checked':''} onchange="state.done['${k}']=this.checked;save()"><div><div class="task-title">${c} — ${moduleNames[c.split(' ')[0]]}</div><div class="task-meta">Teoria • ripasso • esercizi • quiz</div></div></label>`})}
+ else $('todayTasks').innerHTML='<p class="muted">Nessun capitolo programmato oggi.</p>';
+ let cur=currentOrNextRow(),m=cur[1][0].split(' ')[0];$('currentModule').innerHTML=`<h3 style="margin:0 0 6px">${m.replace('M','Modulo ')} — ${moduleNames[m]}</h3><div class="muted">Prossimo: ${cur[1][0]}</div><div class="progress" style="margin-top:13px"><div style="width:${modulePercent(m)}%"></div></div><div class="muted" style="margin-top:6px">${modulePercent(m)}% completato</div><div class="toolbar"><button class="action primary" onclick="go('study',document.querySelectorAll('.bottomnav button')[1])">Continua lo studio</button></div>`;
+ renderWeeklyGoals(p);renderMoods(t);renderStudyList(p);renderModules(keys);renderCalendar(p);renderRegister(p);renderSims();
+ if(pct===100&&!state.finished){state.finished=true;localStorage.setItem('sfp-study-state',JSON.stringify(state));showModal('✨ Complimenti, Sofia','Hai completato tutto il percorso di preparazione. Adesso sei pronta per affrontare la fase delle simulazioni.');celebrate()}
+ checkWeekCelebration(p);
+}
+function modulePercent(m){let entries=allKeys().filter(k=>k.split('|')[1].startsWith(m+' '));return entries.length?Math.round(entries.filter(k=>state.done[k]).length/entries.length*100):0}
+function renderWeeklyGoals(p){let t=todayISO(),wk=weekKey(t),rows=p.filter(([d])=>weekKey(d)===wk),cs=rows.flatMap(x=>x[1]);$('weeklyGoals').innerHTML=cs.length?cs.map(c=>{let row=rows.find(r=>r[1].includes(c)),k=row[0]+'|'+c;return `<label class="goal"><input type="checkbox" ${state.done[k]?'checked':''} onchange="state.done['${k}']=this.checked;save()"><span>${c}</span></label>`}).join(''):'<div class="muted">Nessun obiettivo previsto questa settimana.</div>'}
+function renderMoods(d){let opts=[['😊','Molto bene'],['🙂','Bene'],['😐','Così così'],['😓','Difficile']];$('moods').innerHTML=opts.map(([e,l])=>`<button class="${state.mood[d]===l?'selected':''}" onclick="state.mood['${d}']='${l}';save()"><div style="font-size:24px">${e}</div><div class="muted">${l}</div></button>`).join('')}
+function renderStudyList(p){$('studyList').innerHTML='';p.forEach(([d,cs])=>cs.forEach(c=>{let k=d+'|'+c,status=state.done[k]?'🟢 Completato':(d<todayISO()?'🔁 Da ripassare':'⚪ Non iniziato');$('studyList').innerHTML+=`<div class="study-item"><div><h3>${c} — ${moduleNames[c.split(' ')[0]]}</h3><div class="muted">${fmt(d)} • ${status}</div></div><button class="action ${state.done[k]?'soft':'primary'}" onclick="toggleChapter('${k}')">${state.done[k]?'Riapri':'Inizia'}</button></div>`}))}
+function renderModules(keys){let mods={};keys.forEach(k=>{let m=k.split('|')[1].split(' ')[0];mods[m]=mods[m]||[0,0];mods[m][1]++;if(state.done[k])mods[m][0]++});$('moduleProgress').innerHTML=Object.entries(mods).map(([m,[d,t]])=>{let v=Math.round(d/t*100);return `<div class="module"><div class="module-label"><span>${m.replace('M','Modulo ')} — ${moduleNames[m]}</span><b>${v}%</b></div><div class="progress"><div style="width:${v}%"></div></div></div>`}).join('')}
+function renderCalendar(p){$('calendarBody').innerHTML='';p.forEach(([d,cs])=>{let n=cs.filter(c=>state.done[d+'|'+c]).length,label=n===cs.length?'Completato':n?`${n}/${cs.length}`:'Da fare',cl=n===cs.length?'done':(d<todayISO()?'missed':'planned');$('calendarBody').innerHTML+=`<tr><td>${fmt(d)}</td><td>${cs.join(', ')}</td><td><span class="status ${cl}">${label}</span></td><td><input type="number" min="0" max="30" step=".5" value="${state.quiz[d]||''}" onchange="state.quiz['${d}']=this.value;save()"></td><td><input value="${state.notes[d]||''}" placeholder="Note..." onchange="state.notes['${d}']=this.value;save()"></td></tr>`})}
+function renderRegister(p){$('registerBody').innerHTML='';let completedDays=0,avgE=[];p.forEach(([d,cs])=>{if(cs.some(c=>state.done[d+'|'+c]))completedDays++;if(Number(state.exercise[d])>0)avgE.push(Number(state.exercise[d]));$('registerBody').innerHTML+=`<tr><td>${fmt(d)}</td><td>${cs.join(', ')}</td><td><input type="number" min="0" max="30" step=".5" value="${state.exercise[d]||''}" onchange="state.exercise['${d}']=this.value;save()"></td><td><input type="number" min="0" max="30" step=".5" value="${state.quiz[d]||''}" onchange="state.quiz['${d}']=this.value;save()"></td><td><select onchange="state.safety['${d}']=this.value;save()">${['','⭐','⭐⭐','⭐⭐⭐','⭐⭐⭐⭐','⭐⭐⭐⭐⭐'].map(x=>`<option ${state.safety[d]===x?'selected':''}>${x}</option>`).join('')}</select></td></tr>`});$('registerSummary').innerHTML=`<div class="kpis"><div class="kpi"><strong>${completedDays}</strong><span class="muted">giorni attivi</span></div><div class="kpi"><strong>${avgE.length?(avgE.reduce((a,b)=>a+b,0)/avgE.length).toFixed(1):'—'}</strong><span class="muted">media esercizi</span></div></div>`}
+function renderSims(){$('simulationBody').innerHTML=(state.sims||[]).map(s=>`<tr><td>${fmt(s.date)}</td><td>${s.score}</td><td>${s.time} min</td><td>${s.errors}</td></tr>`).join('')}
+function toggleChapter(k){state.done[k]=!state.done[k];save()}
+function completeToday(){let t=todayISO(),r=plan().find(x=>x[0]===t);if(!r)return alert('Nessun capitolo previsto oggi.');r[1].forEach(c=>state.done[t+'|'+c]=true);save()}
+function postponeToday(){if(!confirm('Vuoi rimandare la giornata e spostare tutto il piano di un giorno?'))return;state.shift++;save()}
+function shiftPlan(n){state.shift+=n;save()}
+function checkWeekCelebration(p){let wk=weekKey(todayISO()),rows=p.filter(([d])=>weekKey(d)===wk);if(rows.length&&rows.every(([d,cs])=>cs.every(c=>state.done[d+'|'+c]))&&!state.weeklyCelebrated[wk]){state.weeklyCelebrated[wk]=true;localStorage.setItem('sfp-study-state',JSON.stringify(state));celebrate();showModal('Settimana completata ⭐','Hai concluso tutti gli obiettivi della settimana. Continua così, Sofia.');}}
+function addSimulation(){if(!$('simDate').value)return alert('Inserisci la data.');state.sims.push({date:$('simDate').value,score:$('simScore').value||0,time:$('simTime').value||0,errors:$('simErrors').value||0});['simDate','simScore','simTime','simErrors'].forEach(id=>$(id).value='');save()}
+function exportData(){let b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sfp-study-backup.json';a.click()}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();alert('Backup importato.')}catch{alert('File non valido.')}};r.readAsText(f)}
+function resetData(){if(confirm('Vuoi cancellare tutti i progressi?')){state={shift:0,done:{},quiz:{},exercise:{},notes:{},safety:{},mood:{},sims:[],weeklyCelebrated:{}};save()}}
+function showModal(t,x){$('modalTitle').textContent=t;$('modalText').textContent=x;$('modal').classList.add('show')}
+function closeModal(){$('modal').classList.remove('show')}
+function openChatGuide(){showModal('Continua con ChatGPT','Apri la conversazione del corso e scrivi il riferimento mostrato in Studio, ad esempio: “Modulo 2, Capitolo 9, Parte 2”.')}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./service-worker.js');
+render();
+</script>
+</body>
+</html>
